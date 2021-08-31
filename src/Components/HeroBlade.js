@@ -1,43 +1,36 @@
-import HeroList from './HeroList';
 import { formatTitle } from '../Helpers/Helpers';
 import {
-    useParams, Route, useRouteMatch
+    Route, useLocation, 
 } from 'react-router-dom';
-import { useContext } from 'react';
-import { HeroesContext } from '../App';
+import {SearchContext} from '../Context/SearchContext';
+import {useContext} from 'react';
+import BioSection from './BioSection';
 import HeroPage from './HeroPage';
 
-const HeroBlade = () => {
-    let { heroname } = useParams();
-    let { url } = useRouteMatch();
-    const heroes = useContext(HeroesContext);
-    const hero = heroes.filter(hero => formatTitle(hero.name) === formatTitle(heroname));
-    const displayedHero = Object.assign({},...hero);
+const HeroBlade = (props) => {
+    let url = useLocation();
+    const [state] = useContext(SearchContext);
+
+    const {
+        name,
+        real_name,
+        hobby,
+        power,
+        nemesis,
+        bio,
+        first_appearance
+    } = props;
 
     return (
         <>
-            <h2>{formatTitle(displayedHero.name)}</h2>
-            <section>
-                <h3>Real name</h3>
-                {displayedHero.real_name}
-            </section>
-            <section>
-                <h3>Hobby:</h3>
-                {displayedHero.hobby}
-            </section>
-            <HeroesContext.Provider value={displayedHero.power}>
-                <section>
-                    <h3>Power:</h3>
-                    <HeroList />
-                </section>
-            </HeroesContext.Provider>
-            <HeroesContext.Provider value={displayedHero.nemesis}>
-                <section>
-                    <h3>Nemesis:</h3>
-                    <HeroList />
-                    <Route path={`${url}/nemesis/:name`} children={<HeroPage />} />
-                </section>
-            </HeroesContext.Provider>
+            { name && <h2>{formatTitle(name)}</h2> }
+            { real_name && <BioSection sectionName={"Real Name"} value={real_name} />}
+            { hobby && <BioSection sectionName={"Hobby"} value={hobby} />}
+            { power && <BioSection sectionName={"Power"} value={power} />}
+            { bio && <BioSection sectionName={"Bio"} value={bio} />}
+            { first_appearance && <BioSection sectionName={"First Appearance"} value={first_appearance} />}
+            { nemesis && <BioSection sectionName={"Nemesis"} value={state.filteredItems} />}
+            <Route path={`${url}/nemesis/:nemesisname`} children={<HeroPage />} />
         </>
     )
 };

@@ -1,13 +1,9 @@
 import HeroListItem from './HeroListItem';
-import { useContext } from 'react';
-import { HeroesContext } from '../App';
 
-const HeroList = () => {
-    const heroes = useContext(HeroesContext);
-    
+const HeroList = ({props}) => {
     return (
         <ul>
-            {heroes.map((hero, i)=> <HeroListItem key={i} props={hero} /> )}
+            {props.map((item, i) => <HeroListItem key={i} props={item} />)}
         </ul>
     );
 }

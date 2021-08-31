@@ -1,3 +1,4 @@
+import { memo } from 'react';
 import { Link, useRouteMatch } from 'react-router-dom';
 import {
     replacingSpace,
@@ -7,17 +8,17 @@ import {
 const HeroListItem = ({props}) => {
     let { url } = useRouteMatch();
 
-    const urlName = replacingSpace(props.name || "");
-    const toUrl = url !== "/" ? `${url}/nemesis/${urlName}` : urlName;
- 
+    const name = replacingSpace(props.name || "");
+    const urlName = url === '/' ? name : `${url}/nemesis/${name}`
+
     return (
         <li>
             { props.name 
-                ? <Link to={toUrl}>{formatTitle(props.name)}</Link>
+                ? <Link to={urlName}>{formatTitle(props.name)}</Link>
                 : <span>{props}</span>
             }
         </li>
     )
 };
 
-export default HeroListItem;
+export default memo(HeroListItem);

@@ -2,32 +2,30 @@ import {
     useContext
 } from 'react';
 import {
-    useParams
+    useParams, useRouteMatch
 } from 'react-router-dom';
-import Breadcrumb from './Breadcrumb';
 import { formatTitle } from '../Helpers/Helpers';
-import { HeroesContext } from '../App';
+import { SearchContext } from '../Context/SearchContext';
 
 const HeroPage = () => {
-    let { name } = useParams();
-    const heroes = useContext(HeroesContext);
-    const hero = heroes.filter(hero => formatTitle(hero.name) === formatTitle(name));
-    const heroBio = Object.assign({}, ...hero);
-
+    let { nemesisname } = useParams();
+    let { url } = useRouteMatch();
+    const [state] = useContext(SearchContext);
+    const p = state.heroes[url.split('/')[1]].nemesis;
+    
     return (
         <div className = "pageContainer">
             <div className = "container-fluid">
-                <Breadcrumb />
-                <h1>{formatTitle(heroBio.name)}</h1>
+                <h1>{formatTitle(nemesisname)}</h1>
                 <section>
-                    {heroBio.bio}
+                    {p.bio}
                 </section>
                 <section>
-                    {heroBio.first_appearance}
+                    {p.first_appearance}
                 </section>
             </div>
         </div>
     )
 };
 
-export default HeroPage; 
+export default HeroPage;
